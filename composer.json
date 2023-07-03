@@ -1,0 +1,32 @@
+{
+    "name": "diswebru/phpexcel",
+    "description": "PHP library for writing and reading files in EXCEL format. Modified to work on PHP 8.",
+    "keywords": ["PHP","Excel","OpenXML","xlsx","xls","spreadsheet"],
+    "homepage": "https://github.com/DisWEBru/phpexcel",
+    "type": "library",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Denis Romashkov",
+            "homepage": "https://disweb.ru"
+        }
+    ],
+    "require": {
+        "php": "^5.2|^7.0",
+        "ext-mbstring": "*",
+        "ext-xml": "*",
+        "ext-xmlwriter": "*"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "2.*"
+    },
+    "recommend": {
+        "ext-zip": "*",
+        "ext-gd": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "PHPExcel": "Classes/"
+        }
+    }
+}

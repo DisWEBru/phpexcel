@@ -1,0 +1,13 @@
+**************************************************************************************
+* PHPExcel
+*
+* The library is downloaded from https://github.com/PHPOffice/PHPExcel
+* PHP library for writing and reading files in EXCEL format.
+* The purpose of the project: modification of the library to work on PHP 8
+* 
+* @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
+**************************************************************************************
+
+2023-06-03 (v1.0.0):
+- clone created
+
