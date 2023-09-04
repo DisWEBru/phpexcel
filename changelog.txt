@@ -8,6 +8,9 @@
 * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
 **************************************************************************************
 
+2023-09-04 (v1.0.2):
+- fixed a problem when creating excel
+
 2023-06-03 (v1.0.1):
 - fixed handling of value data type in PHPExcel_Cell_DefaultValueBinder
 
