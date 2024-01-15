@@ -5,3 +5,9 @@ PHP library for writing and reading files in EXCEL format. Modified https://gith
 ## License
 
 PHPExcel is licensed under [LGPL (GNU LESSER GENERAL PUBLIC LICENSE)](https://github.com/DisWEBru/PHPExcel/blob/main/license.md)
+
+## Installation
+
+```
+composer require diswebru/phpexcel
+```
