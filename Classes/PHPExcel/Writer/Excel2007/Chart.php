@@ -1257,7 +1257,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
      *
      * @throws  PHPExcel_Writer_Exception
      */
-    private function writePlotSeriesValues($plotSeriesValues, $objWriter, $groupType, $dataType = 'str', PHPExcel_Worksheet $pSheet)
+    private function writePlotSeriesValues($plotSeriesValues, $objWriter, $groupType, $dataType, PHPExcel_Worksheet $pSheet)
     {
         if (is_null($plotSeriesValues)) {
             return;
