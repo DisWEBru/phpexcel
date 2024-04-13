@@ -577,7 +577,7 @@ class PHPExcel
      * @return PHPExcel_Worksheet
      * @throws PHPExcel_Exception
      */
-    public function getSheet($pIndex = 0)
+    public function getSheet(int $pIndex = 0): PHPExcel_Worksheet
     {
         if (!isset($this->workSheetCollection[$pIndex])) {
             $numSheets = $this->getSheetCount();
@@ -594,7 +594,7 @@ class PHPExcel
      *
      * @return PHPExcel_Worksheet[]
      */
-    public function getAllSheets()
+    public function getAllSheets(): array
     {
         return $this->workSheetCollection;
     }
@@ -605,7 +605,7 @@ class PHPExcel
      * @param  string $pName Sheet name
      * @return PHPExcel_Worksheet
      */
-    public function getSheetByName($pName = '')
+    public function getSheetByName(string $pName = ''): PHPExcel_Worksheet|null
     {
         $worksheetCount = count($this->workSheetCollection);
         for ($i = 0; $i < $worksheetCount; ++$i) {
