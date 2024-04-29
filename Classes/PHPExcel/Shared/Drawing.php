@@ -85,7 +85,7 @@ class PHPExcel_Shared_Drawing
             $colWidth = $pValue * 11 * PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['width'] / PHPExcel_Shared_Font::$defaultColumnWidths['Calibri'][11]['px'] / $size;
         }
 
-        return $colWidth;
+        return (int) $colWidth;
     }
 
     /**
