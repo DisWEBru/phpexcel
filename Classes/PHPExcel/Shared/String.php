@@ -549,12 +549,14 @@ class PHPExcel_Shared_String
     /**
      * Get character count. First try mbstring, then iconv, finally strlen
      *
-     * @param string $value
+     * @param string|null $value
      * @param string $enc Encoding
      * @return int Character count
      */
-    public static function CountCharacters($value, $enc = 'UTF-8')
+    public static function CountCharacters(string|null $value, string $enc = 'UTF-8'): int
     {
+        if (is_null($value)) return 0;
+
         if (self::getIsMbstringEnabled()) {
             return mb_strlen($value, $enc);
         }
