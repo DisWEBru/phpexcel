@@ -265,7 +265,7 @@ class PHPExcel_Cell
      *    @return    mixed
      *    @throws    PHPExcel_Exception
      */
-    public function getCalculatedValue($resetLog = true)
+    public function getCalculatedValue(bool $resetLog = true): mixed
     {
 //echo 'Cell '.$this->getCoordinate().' value is a '.$this->dataType.' with a value of '.$this->getValue().PHP_EOL;
         if ($this->dataType == PHPExcel_Cell_DataType::TYPE_FORMULA) {
@@ -299,7 +299,7 @@ class PHPExcel_Cell
             }
 //echo 'Returning calculated value of '.$result.' for cell '.$this->getCoordinate().PHP_EOL;
             return $result;
-        } elseif ($this->value instanceof PHPExcel_RichText) {
+        } else if ($this->value instanceof PHPExcel_RichText) {
 //        echo 'Cell value for '.$this->getCoordinate().' is rich text: Returning data value of '.$this->value.'<br />';
             return $this->value->getPlainText();
         }

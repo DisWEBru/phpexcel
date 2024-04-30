@@ -1133,15 +1133,22 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
     /**
      * Generate row
      *
-     * @param    PHPExcel_Worksheet    $pSheet            PHPExcel_Worksheet
-     * @param    array                $pValues        Array containing cells in a row
-     * @param    int                    $pRow            Row number (0-based)
-     * @return    string
-     * @throws    PHPExcel_Writer_Exception
+     * @param    PHPExcel_Worksheet    $pSheet         PHPExcel_Worksheet
+     * @param    array|null            $pValues        Array containing cells in a row
+     * @param    int                   $pRow           Row number (0 - based)
+     * @param    string                $cellType       Tag name for cell (td or th)
+     * @return   string
+     * @throws   PHPExcel_Writer_Exception
      */
-    private function generateRow(PHPExcel_Worksheet $pSheet, $pValues = null, $pRow = 0, $cellType = 'td')
+    private function generateRow(
+        PHPExcel_Worksheet $pSheet,
+        array|null $pValues = null,
+        int $pRow = 0,
+        string $cellType = 'td'
+    ): string
     {
         if (is_array($pValues)) {
+            if ($cellType != 'th' && $cellType != 'td') $cellType = 'td';
             // Construct HTML
             $html = '';
 
@@ -1185,15 +1192,8 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
                     $cssClass = 'column' . $colNum;
                 } else {
                     $cssClass = array();
-                    if ($cellType == 'th') {
-                        if (isset($this->cssStyles['table.sheet' . $sheetIndex . ' th.column' . $colNum])) {
-                            $this->cssStyles['table.sheet' . $sheetIndex . ' th.column' . $colNum];
-                        }
-                    } else {
-                        if (isset($this->cssStyles['table.sheet' . $sheetIndex . ' td.column' . $colNum])) {
-                            $this->cssStyles['table.sheet' . $sheetIndex . ' td.column' . $colNum];
-                        }
-                    }
+                    if (isset($this->cssStyles["table.sheet{$sheetIndex} {$cellType}.column{$colNum}"]))
+                        $this->cssStyles["table.sheet{$sheetIndex} {$cellType}.column{$colNum}"];
                 }
                 $colSpan = 1;
                 $rowSpan = 1;
@@ -1216,71 +1216,59 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
                             if ($element instanceof PHPExcel_RichText_Run) {
                                 $cellData .= '<span style="' . $this->assembleCSS($this->createCSSStyleFont($element->getFont())) . '">';
 
-                                if ($element->getFont()->getSuperScript()) {
+                                if ($element->getFont()->getSuperScript())
                                     $cellData .= '<sup>';
-                                } elseif ($element->getFont()->getSubScript()) {
+                                else if ($element->getFont()->getSubScript())
                                     $cellData .= '<sub>';
-                                }
                             }
 
                             // Convert UTF8 data to PCDATA
                             $cellText = $element->getText();
-                            $cellData .= htmlspecialchars($cellText);
+                            if (!is_null($cellText))
+                                $cellData .= htmlspecialchars($cellText);
 
                             if ($element instanceof PHPExcel_RichText_Run) {
-                                if ($element->getFont()->getSuperScript()) {
+                                if ($element->getFont()->getSuperScript())
                                     $cellData .= '</sup>';
-                                } elseif ($element->getFont()->getSubScript()) {
+                                else if ($element->getFont()->getSubScript())
                                     $cellData .= '</sub>';
-                                }
 
                                 $cellData .= '</span>';
                             }
                         }
                     } else {
-                        if ($this->preCalculateFormulas) {
-                            $cellData = PHPExcel_Style_NumberFormat::toFormattedString(
-                                $cell->getCalculatedValue(),
-                                $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(),
-                                array($this, 'formatColor')
-                            );
-                        } else {
-                            $cellData = PHPExcel_Style_NumberFormat::toFormattedString(
-                                $cell->getValue(),
-                                $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(),
-                                array($this, 'formatColor')
-                            );
-                        }
+                        $cellData = PHPExcel_Style_NumberFormat::toFormattedString(
+                            $this->preCalculateFormulas ? $cell->getCalculatedValue() : $cell->getValue(),
+                            $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getNumberFormat()->getFormatCode(),
+                            [$this, 'formatColor']
+                        );
                         if (!is_null($cellData))
                             $cellData = htmlspecialchars($cellData);
-                        if ($pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont()->getSuperScript()) {
-                            $cellData = '<sup>'.$cellData.'</sup>';
-                        } elseif ($pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont()->getSubScript()) {
-                            $cellData = '<sub>'.$cellData.'</sub>';
-                        }
+                        if ($pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont()->getSuperScript())
+                            $cellData = '<sup>' . ($cellData ?? '') . '</sup>';
+                        else if ($pSheet->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont()->getSubScript())
+                            $cellData = '<sub>' . ($cellData ?? '') . '</sub>';
                     }
 
-                    // Converts the cell content so that spaces occuring at beginning of each new line are replaced by &nbsp;
-                    // Example: "  Hello\n to the world" is converted to "&nbsp;&nbsp;Hello\n&nbsp;to the world"
-                    $cellData = preg_replace("/(?m)(?:^|\\G) /", '&nbsp;', $cellData);
+                    if (!is_null($cellData)) {
+                        // Converts the cell content so that spaces occuring at beginning of each new line are replaced by &nbsp;
+                        // Example: "  Hello\n to the world" is converted to "&nbsp;&nbsp;Hello\n&nbsp;to the world"
+                        $cellData = preg_replace("/(?m)(?:^|\\G) /", '&nbsp;', $cellData);
 
-                    // convert newline "\n" to '<br>'
-                    $cellData = nl2br($cellData);
+                        // convert newline "\n" to '<br>'
+                        $cellData = nl2br($cellData);
+                    }
 
                     // Extend CSS class?
                     if (!$this->useInlineCss) {
                         $cssClass .= ' style' . $cell->getXfIndex();
                         $cssClass .= ' ' . $cell->getDataType();
                     } else {
-                        if ($cellType == 'th') {
-                            if (isset($this->cssStyles['th.style' . $cell->getXfIndex()])) {
-                                $cssClass = array_merge($cssClass, $this->cssStyles['th.style' . $cell->getXfIndex()]);
-                            }
-                        } else {
-                            if (isset($this->cssStyles['td.style' . $cell->getXfIndex()])) {
-                                $cssClass = array_merge($cssClass, $this->cssStyles['td.style' . $cell->getXfIndex()]);
-                            }
-                        }
+                        if (isset($this->cssStyles["{$cellType}.style" . $cell->getXfIndex()]))
+                            $cssClass = array_merge(
+                                $cssClass,
+                                $this->cssStyles["{$cellType}.style" . $cell->getXfIndex()]
+                            );
 
                         // General horizontal alignment: Actual horizontal alignment depends on dataType
                         $sharedStyle = $pSheet->getParent()->getCellXfByIndex($cell->getXfIndex());
@@ -1293,7 +1281,9 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 
                 // Hyperlink?
                 if ($pSheet->hyperlinkExists($coordinate) && !$pSheet->getHyperlink($coordinate)->isInternal()) {
-                    $cellData = '<a href="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getUrl()) . '" title="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getTooltip()) . '">' . $cellData . '</a>';
+                    $cellData = '<a href="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getUrl()) .
+                        '" title="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getTooltip()) . '">' .
+                        ($cellData ?? '') . '</a>';
                 }
 
                 // Should the cell be written or is it swallowed by a rowspan or colspan?
@@ -1310,7 +1300,8 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 
                     //    Also apply style from last cell in merge to fix borders -
                     //        relies on !important for non-none border declarations in createCSSStyleBorder
-                    $endCellCoord = PHPExcel_Cell::stringFromColumnIndex($colNum + $colSpan - 1) . ($pRow + $rowSpan);
+                    $endCellCoord = PHPExcel_Cell::stringFromColumnIndex($colNum + $colSpan - 1) .
+                        ($pRow + $rowSpan);
                     if (!$this->useInlineCss) {
                         $cssClass .= ' style' . $pSheet->getCell($endCellCoord)->getXfIndex();
                     }
