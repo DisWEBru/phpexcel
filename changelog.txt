@@ -8,6 +8,22 @@
 * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
 **************************************************************************************
 
+2024-04-30 (v2.0.2):
+- fixed: passing null to htmlspecialchars in PHPExcel_Writer_HTML::generateRow. #5, #6. a few code edits
+
+2024-04-29 (v2.0.1):
+- fixed error: Implicit conversion from float to int loses precision #2
+- fixed: Passing null to parameter 1 () of type string is deprecated. #3
+- fixed outdated way to get character from string in columnIndexFromString
+- fixed: Implicit conversion from float to int loses precision in stringFromColumnIndex. #4
+
+2024-04-13 (v2.0.0):
+- Addressed 'PHP Deprecated' notices #1. Removed support for PHP 7.0, added support for PHP 8.1,8.2,8.3
+
+2024-01-19 (v1.0.6):
+- fixed deprecated obtaining of character by index from string
+- fixed obsolete getting character from string
+
 2023-09-04 (v1.0.2):
 - fixed a problem when creating excel
 
@@ -16,4 +32,3 @@
 
 2023-06-03 (v1.0.0):
 - clone created
-
