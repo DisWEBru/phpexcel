@@ -182,7 +182,7 @@ class PHPExcel_Calculation_FormulaParser
             // end marks token
             if ($inString) {
                 if ($this->formula[$index] == PHPExcel_Calculation_FormulaParser::QUOTE_DOUBLE) {
-                    if ((($index + 2) <= $formulaLength) && ($this->formula{$index + 1} == PHPExcel_Calculation_FormulaParser::QUOTE_DOUBLE)) {
+                    if ((($index + 2) <= $formulaLength) && ($this->formula[$index + 1] == PHPExcel_Calculation_FormulaParser::QUOTE_DOUBLE)) {
                         $value .= PHPExcel_Calculation_FormulaParser::QUOTE_DOUBLE;
                         ++$index;
                     } else {
@@ -202,7 +202,7 @@ class PHPExcel_Calculation_FormulaParser
             // end does not mark a token
             if ($inPath) {
                 if ($this->formula[$index] == PHPExcel_Calculation_FormulaParser::QUOTE_SINGLE) {
-                    if ((($index + 2) <= $formulaLength) && ($this->formula{$index + 1} == PHPExcel_Calculation_FormulaParser::QUOTE_SINGLE)) {
+                    if ((($index + 2) <= $formulaLength) && ($this->formula[$index + 1] == PHPExcel_Calculation_FormulaParser::QUOTE_SINGLE)) {
                         $value .= PHPExcel_Calculation_FormulaParser::QUOTE_SINGLE;
                         ++$index;
                     } else {
