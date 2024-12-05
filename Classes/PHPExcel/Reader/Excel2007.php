@@ -312,11 +312,11 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
         
         // Apache POI fixes
         $contents = $archive->getFromIndex(
-            $archive->locateName($fileName, ZIPARCHIVE::FL_NOCASE)
+            $archive->locateName($fileName, 1)
         );
         if ($contents === false) {
             $contents = $archive->getFromIndex(
-                $archive->locateName(substr($fileName, 1), ZIPARCHIVE::FL_NOCASE)
+                $archive->locateName(substr($fileName, 1), 1)
             );
         }
 
