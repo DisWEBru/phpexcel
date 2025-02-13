@@ -55,6 +55,7 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
             foreach ($pSheet->getCellCollection() as $cellID) {
                 $cell = $pSheet->getCell($cellID);
                 $cellValue = $cell->getValue();
+                if (is_float($cellValue)) $cellValue = (string) $cellValue;
                 if (!is_object($cellValue) &&
                     ($cellValue !== null) &&
                     $cellValue !== '' &&
